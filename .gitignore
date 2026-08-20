@@ -1,0 +1,23 @@
+# Agent config
+.agents/
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# PDK (downloaded via volare, ~700MB)
+pdk/
+
+# Simulation artifacts
+warmup/warmup_sim
+warmup/warmup_sim.vcd
+*.ext
+*.spice
+extract.tcl
+
+# Magic build
+tools/magic-src/
+
+# OS
+.DS_Store
