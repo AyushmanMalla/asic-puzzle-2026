@@ -126,7 +126,8 @@ check: check-yosys check-iverilog check-surfer
 	@printf "$(G)  All smoke tests passed!$(N)\n"
 	@printf "$(G)══════════════════════════════════════$(N)\n"
 
-# ── Yosys: synthesize warmup source ──────────────────────────────────
+# Terminal equivalent:
+#   yosys -p "read_verilog warmup/00_source.v; synth -top adder_demo; stat" 2>&1 | grep -E '(Number of|cells:|wires:)'
 check-yosys:
 	@printf "\n$(Y)[check]$(N) $(B)Yosys$(N) — synthesize warmup/00_source.v\n"
 	@command -v yosys >/dev/null 2>&1 || \
@@ -137,7 +138,8 @@ check-yosys:
 		stat" 2>&1 | grep -E '(Number of|cells:|wires:)' | sed 's/^/  /'
 	@printf "$(G)✓ Yosys synthesis OK$(N)\n"
 
-# ── Icarus Verilog: compile + simulate warmup, produce VCD ──────────
+# Terminal equivalent:
+#   iverilog -o warmup/warmup_sim warmup/00_source.v warmup/tb_warmup.v && cd warmup && vvp warmup_sim
 check-iverilog:
 	@printf "\n$(Y)[check]$(N) $(B)Icarus Verilog$(N) — simulate warmup design\n"
 	@command -v iverilog >/dev/null 2>&1 || \
@@ -151,6 +153,8 @@ check-iverilog:
 	fi
 
 # ── Surfer: verify it can open the example VCD ──────────────────────
+# Terminal equivalent:
+#   surfer --version
 check-surfer:
 	@printf "\n$(Y)[check]$(N) $(B)Surfer$(N) — verify VCD loading\n"
 	@command -v surfer >/dev/null 2>&1 || \

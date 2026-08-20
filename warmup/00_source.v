@@ -9,9 +9,18 @@ module shift_register (
         if (!rst_n)
             parallel_out <= 8'b0;
         else if (en)
-            parallel_out <= {parallel_out[6:0], serial_in};
+            parallel_out <= {parallel_out[6:0], serial_in}; // effectively passing MSB first per clock cycle, in 8 cycles, 
+                                                            // you have the full 8-bit value valid for exactly one clock cycle,
+                                                            // after that the value decays to 0 in subsequent cycles.
     end
 endmodule
+
+//cycle 1 -> init = 0000_0000, in = 1, final = 0000_0001 - 0x01
+//cycle 2 -> init = 0000_0001, in = 1, final = 0000_0011 - 0x03
+//cycle 3 -> init = 0000_0011, in = 1, final = 0000_0111 - 0x07
+//cycle 4 -> init = 0000_0111, in = 1, final = 0000_1111 - 0x0f
+//cycle 5 -> init = 0000_1111, in = 0, final = 0001_1110 - 0x1e
+//cycle 6 -> init = 0001_1110, in = 0, final = 0011_1100 - 0x3c
 
 module adder8 (
     input  wire [7:0] a,
